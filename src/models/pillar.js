@@ -12,11 +12,4 @@ class Pillar {
         noStroke();
         fill(this.color);
     }
-
-    static async swap(current, random) {
-        const temp = current.h;
-        current.h = random.h;
-        random.h = temp;
-        await new Promise(resolve => setTimeout(resolve, 5))
-    }
 }

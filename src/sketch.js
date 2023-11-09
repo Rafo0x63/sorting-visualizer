@@ -1,4 +1,4 @@
-let numOfPillars = 1000;
+let numOfPillars = 100;
 let pillars = [];
 let states = [];
 let arr = [10,2,3,9,7,1,6,5];
@@ -12,15 +12,15 @@ document.getElementById("bubbleSortBtn").addEventListener('click', function () {
 });
 document.getElementById("randomizeBtn").addEventListener('click', function () {
     randomize(pillars);
-    console.log(pillars);
 });
 document.getElementById("mergeSortBtn").addEventListener('click', function () {
     mergeSort(pillars);
-    console.log(pillars);
 });
 document.getElementById("selSortBtn").addEventListener('click', function () {
     selectionSort(pillars);
-    console.log(pillars);
+});
+document.getElementById("shakerSortBtn").addEventListener('click', function () {
+    cocktailShakerSort(pillars);
 });
 
 function setup() {
@@ -29,6 +29,33 @@ function setup() {
     drawPillars(pillars);
     randomize(pillars);
 
+}
+
+async function cocktailShakerSort(arr) {
+    let start = 0;
+    let end = arr.length;
+
+    while (start < end) {
+        for (let i = start; i < end; i++) {
+            states[i] = 1;
+        }
+        states[start] = 0;
+        states[end] = 0;
+        for (let i = start; i < end - 1; i++) {
+            if (arr[i].h < arr[i+1].h) {
+                await swap(arr[i], arr[i+1]);
+            }
+        }
+        end--;
+        for (let i = end - 1; i >= start + 1; i--) {
+            if (arr[i].h > arr[i-1].h) {
+                await swap(arr[i], arr[i-1]);
+            }
+        }
+        start++;
+        states[start - 1] = -1;
+        states[end + 1] = -1;
+    }
 }
 
 async function selectionSort(arr) {
@@ -49,45 +76,45 @@ async function selectionSort(arr) {
     }
 }
 
-function mergeSort(arr) {
-    if (arr.length < 2) return;
+// function mergeSort(arr) {
+//     if (arr.length < 2) return;
 
-    const mid = Math.floor(arr.length / 2);
-    let left = arr.slice(0, mid);
-    let right = arr.slice(mid);
+//     const mid = Math.floor(arr.length / 2);
+//     let left = arr.slice(0, mid);
+//     let right = arr.slice(mid);
 
-    mergeSort(left);
-    mergeSort(right)
-    merge(arr, left, right);
-}
+//     mergeSort(left);
+//     mergeSort(right)
+//     merge(arr, left, right);
+// }
 
-function merge(arr, left, right) {
-    let i = 0;
-    let j = 0;
-    let k = 0;
-    while (i < left.length && j < right.length) {
-        if (left[i].h > right[j].h) {
-            swap(arr[k], left[i]);
-            i++;
-        } else if (left[i].h < right[j].h) {
-            swap(arr[k], right[j]);
-            j++;
-        }
-        k++;
-    }
+// function merge(arr, left, right) {
+//     let i = 0;
+//     let j = 0;
+//     let k = 0;
+//     while (i < left.length && j < right.length) {
+//         if (left[i].h > right[j].h) {
+//             swap(arr[k], left[i]);
+//             i++;
+//         } else if (left[i].h < right[j].h) {
+//             swap(arr[k], right[j]);
+//             j++;
+//         }
+//         k++;
+//     }
 
-    while (i < left.length) {
-        swap(arr[k], left[i]);
-        i++;
-        k++;
-    }
+//     while (i < left.length) {
+//         swap(arr[k], left[i]);
+//         i++;
+//         k++;
+//     }
 
-    while (j < right.length) {
-        swap(arr[k], right[j]);
-        j++;
-        k++;
-    }
-}
+//     while (j < right.length) {
+//         swap(arr[k], right[j]);
+//         j++;
+//         k++;
+//     }
+// }
 
 async function bubbleSort(arr) {
     for (let i = 0; i < arr.length; i++) {
@@ -121,7 +148,6 @@ async function partition(arr, start, end) {
 
     for (let i = start; i < end; i++) {
         if (arr[i].h > pivotValue.h) {
-            console.log(`Swapping pillar at ${i} with ${pivotIndex}`);
             await swap(arr[i], arr[pivotIndex]);
             pivotIndex++;
         }
@@ -157,7 +183,7 @@ function randomize(arr) {
 
 
 function drawPillars(pillars) {
-    for (let i = 0; i <= numOfPillars; i++) {
+    for (let i = 0; i < numOfPillars; i++) {
         let x = i * width/numOfPillars;
         let y = height;
         let w = width/numOfPillars+1;
